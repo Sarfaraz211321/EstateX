@@ -37,7 +37,7 @@ const UserRegister = () => {
       formData.append('address', data.address);
       formData.append('profile', data.profile[0]);
 
-         const response = await axios.post('http://localhost:5000/api/user-register', 
+         const response = await axios.post('https://estatex-backend-j4i8.onrender.com/api/user-register', 
   formData, 
   {
     headers: {

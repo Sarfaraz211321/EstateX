@@ -1,49 +1,164 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from '../Landingpage/Navbar'
+import Navbar from "../Landingpage/Navbar";
 
-const  AdminContactUsList = () => {
+const AdminContactUsList = () => {
+
+  const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+
+    const fetchContacts = async () => {
+      try {
+
+        const response = await fetch(
+          "https://estatex-backend-j4i8.onrender.com/api/contact-us-list"
+        );
+
+        const result = await response.json();
+
+        if (result.code === 200) {
+          setContacts(result.data);
+        } else {
+          setError("Failed to fetch contact messages.");
+        }
+
+      } catch (err) {
+        console.log(err);
+        setError("Something went wrong while fetching messages.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContacts();
+
+  }, []);
+
   return (
     <>
-    <Navbar/>
-    <section style={{ backgroundColor: "#FFFFD0", padding: "60px 0" }}>
-      <div className="container text-center mb-4">
-        <h2 className="fw-bold text-danger">Contact Us!</h2>
-      </div>
-      <div className="container d-flex justify-content-center">
-        <div className="p-4 shadow bg-white rounded" style={{ width: "100%", maxWidth: "900px" }}>
-          <form>
-            <div className="row mb-3">
-              <div className="col-md-6 mb-3">
-                <label className="form-label fw-bold">Your Name</label>
-                <input type="text" className="form-control" placeholder="Enter your name" />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label fw-bold">Your Email</label>
-                <input type="email" className="form-control" placeholder="Enter your email" />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label fw-bold">Phone Number</label>
-                <input type="text" className="form-control" placeholder="Enter phone number" />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label fw-bold">Subject</label>
-                <input type="text" className="form-control" placeholder="Subject" />
-              </div>
-              <div className="col-12 mb-3">
-                <label className="form-label fw-bold">Message</label>
-                <textarea className="form-control" rows="4" placeholder="Your message"></textarea>
+      <Navbar />
+
+      <section
+        style={{
+          backgroundColor: "#FFFFD0",
+          minHeight: "100vh",
+          padding: "60px 0"
+        }}
+      >
+        <div className="container">
+
+          <div className="text-center mb-4">
+            <h2 className="fw-bold text-danger">
+              Contact Messages
+            </h2>
+
+            <p className="text-muted">
+              User contact messages
+            </p>
+          </div>
+
+          {loading ? (
+
+            <div className="text-center py-5">
+              <div
+                className="spinner-border text-danger"
+                role="status"
+              ></div>
+
+              <p className="mt-3 text-muted">
+                Loading messages...
+              </p>
+            </div>
+
+          ) : error ? (
+
+            <div className="alert alert-danger text-center">
+              {error}
+            </div>
+
+          ) : contacts.length === 0 ? (
+
+            <div className="card shadow-sm border-0">
+              <div className="card-body text-center py-5">
+
+                <h5 className="text-muted">
+                  No contact messages found
+                </h5>
+
+                <p className="mb-0">
+                  User submitted messages will appear here.
+                </p>
+
               </div>
             </div>
-            <div className="text-center">
-              <button type="submit" className="btn btn-outline-danger px-4">
-                Send Message
-              </button>
+
+          ) : (
+
+            <div className="table-responsive bg-white rounded shadow">
+
+              <table className="table table-bordered table-hover mb-0">
+
+                <thead className="table-danger">
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  {contacts.map((contact, index) => (
+
+                    <tr key={contact._id}>
+
+                      <td>{index + 1}</td>
+
+                      <td>
+                        {contact.name}
+                      </td>
+
+                      <td>
+                        {contact.email}
+                      </td>
+
+                      <td>
+                        {contact.phone}
+                      </td>
+
+                      <td>
+                        {contact.subject}
+                      </td>
+
+                      <td style={{ minWidth: "250px" }}>
+                        {contact.message}
+                      </td>
+
+                      <td style={{ minWidth: "130px" }}>
+                        {new Date(contact.createdAt).toLocaleDateString()}
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+                </tbody>
+
+              </table>
+
             </div>
-          </form>
+
+          )}
+
         </div>
-      </div>
-    </section>
+      </section>
     </>
   );
 };

@@ -9,7 +9,7 @@ const UserList = () => {
     fetchData();
   }, [])
   const fetchData = async () => {
-    const response = await axios.get('http://localhost:5000/api/admin-user-list');
+    const response = await axios.get('https://estatex-backend-j4i8.onrender.com/api/admin-user-list');
     if (response?.data?.code == 200) {
       setData(response?.data?.data)
     }
@@ -47,7 +47,7 @@ const UserList = () => {
                       <td> {item?.email}  </td>
                       <td> {item?.contact}   </td>
                       <td>{item?.address}    </td> 
-                      <td><img   height="60" width="100" src={`http://localhost:5000/img/${item?.profile}`} alt=''/>    </td>
+                      <td><img   height="60" width="100" src={`https://estatex-backend-j4i8.onrender.com/img/${item?.profile}`} alt=''/>    </td>
                      </tr>
                   </>)
                 })

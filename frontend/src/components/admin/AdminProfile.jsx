@@ -55,7 +55,7 @@ const AdminProfile = () => {
       formData.append('profile', data.profile[0]);
       formData.append('userId',userData?._id)
 
-      const response = await axios.put('http://localhost:5000/api/user-update', formData, {
+      const response = await axios.put('https://estatex-backend-j4i8.onrender.com/api/user-update', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -26,7 +26,7 @@ const SignIn = () => {
   })
 
   const handleLogin = async (data) => {
-    const response = await axios.post('http://localhost:5000/api/login', data);
+    const response = await axios.post('https://estatex-backend-j4i8.onrender.com/api/login', data);
     if (response?.data?.code == 200) {
 
 
