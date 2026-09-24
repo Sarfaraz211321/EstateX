@@ -1,5 +1,5 @@
 import express from 'express';
-import { userModel, propertyModel, buyerModel } from '../model/table.js';
+import { userModel, propertyModel, buyerModel, contactModel } from '../model/table.js';
 const router = express.Router();
 router.post('/user-register', async (req, res) => {
   try {
@@ -169,8 +169,64 @@ router.post('/user-bought-list', async (req, res) => {
 })
 
 
-router.post('/add-contact-us', async(req,res)=>{
-  
-})
+router.post('/add-contact-us', async (req, res) => {
+  try {
+
+    const { name, email, phone, subject, message } = req.body;
+
+    const data = new contactModel({
+      name,
+      email,
+      phone,
+      subject,
+      message
+    });
+
+    const result = await data.save();
+
+    res.json({
+      code: 200,
+      message: "Message sent successfully.",
+      data: result
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.json({
+      code: 500,
+      message: "Internal Server Error",
+      data: ''
+    });
+
+  }
+});
+
+router.get('/contact-us-list', async (req, res) => {
+  try {
+
+    const result = await contactModel
+      .find()
+      .sort({ createdAt: -1 });
+
+    res.json({
+      code: 200,
+      message: "Contact data fetched successfully.",
+      data: result
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.json({
+      code: 500,
+      message: "Internal Server Error",
+      data: ''
+    });
+
+  }
+});
 
 export default router;
